@@ -2930,12 +2930,13 @@
           $player.load();
           $body.addClass('is-loaded');
 
-          const scrollOpts = {
-            behavior: 'smooth',
-            block: 'center'
+          if (!isPIP()) {
+            const scrollOpts = {
+              behavior: 'smooth',
+              block: 'center'
+            }
+            setTimeout(() => $player.scrollIntoView(scrollOpts), 16);
           }
-          setTimeout(() => $player.scrollIntoView(scrollOpts), 16);
-
         } else { // Reset the player if no URL supplied
           updateDuration(0);
 
