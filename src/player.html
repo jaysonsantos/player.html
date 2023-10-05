@@ -2688,14 +2688,16 @@
 
         const $el = getTargetEl(e);
 
+        let replace = true;
         if ($el.hasClass('file')) actionPlay($el.href);
         if ($el.hasClass('folder')) {
           hashState.location = $el.href;
           clearThumbnailQueue();
           createLinks($el.href);
+          replace = false;
         }
 
-        updateHash();
+        updateHash(replace);
       }
 
       const createFileTemplate = (url, label, optionalClasses = '', preRenderedThumbnailUrl = '' ) => {
@@ -2782,10 +2784,14 @@
         return hash;
       }
 
-      const updateHash = () => {
+      const updateHash = (replace) => {
         var url = new URL(location);
         url.hash = encodeHash(getState());
-        history.replaceState(null, document.title, url);
+        if (replace) {
+          history.replaceState (null, document.title, url);
+        } else {
+          history.pushState (null, document.title, url);
+        }
       }
 
       const updateTitle = () => {
@@ -3258,7 +3264,7 @@
 
       const updateProgress = () => {
         const throttledUpdate = throttle(() => {
-          updateHash();
+          updateHash(true);
           updateTitle();
         }, app.options.updateRate.timeupdate * 25);
 
